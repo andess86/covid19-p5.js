@@ -9,6 +9,8 @@ var zoom = 1;
 var deaths;
 var confirmed;
 var recovered;
+var fr = 15;
+var iterator = 6;
 
 function preload() {
   mapimg = loadImage(
@@ -39,7 +41,8 @@ function mercY(lat) {
   return a * c;
 }
 
-function setup() {
+function draw() {
+  var dataLength = deaths[0].split(/,/);
   createCanvas(1024, 512);
   translate(width / 2, height / 2);
   imageMode(CENTER);
@@ -48,16 +51,23 @@ function setup() {
   var centerX = mercX(clon);
   var centerY = mercY(clat);
 
-  for (var i = 0; i < deaths.length; i++) {
+  // Start at index 1 to skip headers
+  for (var i = 1; i < deaths.length; i++) {
     var data = deaths[i].split(/,/);
-    // console.log(data);
     var lat = data[2];
     var long = data[3];
-    var dead = data[data.length -1];
-
+    var dead = data[iterator];
     var x = mercX(long) - centerX;
     var y = mercY(lat) - centerY;
-    fill(255, 0, 255, 25);
-    ellipse(x, y, 0.1*dead, 0.1*dead);
+    fill(255, 0, 10, 50);
+    ellipse(x, y, Number(dead) / 10, Number(dead) / 10);
   }
+  if (iterator < dataLength.length - 1) {
+    iterator++;
+  }
+  console.log(iterator);
+}
+
+function setup() {
+  frameRate(fr);
 }
